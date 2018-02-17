@@ -28,7 +28,7 @@ class AMP_Action extends Typecho_Widget implements Widget_Interface_Do
         $slugtemp = Typecho_Widget::widget('AMP_Action')->getSlugRule();
         $ampurl = $mipurl = '';
         
-        if ($widget->is('index')) {
+        if ($widget->is('index') and !isset($widget->request->page)) {
             if (Helper::options()->plugin('AMP')->ampIndex == 1) {
                 $fullURL = Typecho_Common::url("ampindex", Helper::options()->index);
                 $ampurl = "\n<link rel=\"amphtml\" href=\"{$fullURL}\">\n";
@@ -158,7 +158,8 @@ class AMP_Action extends Typecho_Widget implements Widget_Interface_Do
             );
         }
         $arr = array('items' => $article_data);
-        echo json_encode($arr);
+	    header("Access-Control-Allow-Origin: *");
+	    print(json_encode($arr));
     }
 
     public function AMPindex(){
@@ -324,7 +325,7 @@ class AMP_Action extends Typecho_Widget implements Widget_Interface_Do
         }
         $appid = $options->plugin('AMP')->baiduAPPID;
         $token = $options->plugin('AMP')->baiduTOKEN;
-        $api = "http://data.zz.baidu.com/urls?appid={$appid}&token={$token}&type=realtime";
+        $api = "http://data.zz.baidu.com/urls?appid={$appid}&token={$token}&type=realtime,original";
         
         $article = Typecho_Widget::widget('AMP_Action')->getArticleByCid($class->cid);
         
